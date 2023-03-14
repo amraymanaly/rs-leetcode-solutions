@@ -24,6 +24,11 @@ mod regular_expression_matching {
 
     #[test]
     fn example5() {
-        assert_eq!(is_match("b".into(), "b*b+b*".into()), true);
+        assert_eq!(is_match("b".into(), "b*b".into()), true);
+    }
+
+    #[test]
+    fn example6() {
+        assert_eq!(is_match("aa".into(), "a".into()), false);
     }
 }

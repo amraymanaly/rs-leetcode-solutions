@@ -11,25 +11,34 @@ fn is_there_a_match(s: &str, p: &String) -> bool {
     //    no? pass on the string right after that first character
 
     // (1)
-    if p.len() == 0 {
-        return false;
-    }
-    let pc = p.as_bytes()[0] as char;
-    let match_pc = |c| pc == '.' || c == pc;
+    // if p.len() == 0 {
+    // return false;
+    // }
+    // let pc = p.as_bytes()[0] as char;
+    // let match_pc = |c| pc == '.' || c == pc;
 
-    if let Some(idx_s) = s.find(match_pc) {
-        // (2), (3)
-        return is_there_a_match_from_here(
-            &s[idx_s..],
-            p,
-            LoopVars {
-                repeated_once: false,
-                idx_s: 0,
-                idx_p: 0,
-            },
-        ) || is_there_a_match(&s[idx_s + 1..], p);
-    }
-    s.len() == 0 || can_pattern_be_ignored(p)
+    // if let Some(idx_s) = s.find(match_pc) {
+    //     // (2), (3)
+    //     return is_there_a_match_from_here(
+    //         &s[idx_s..],
+    //         p,
+    // LoopVars {
+    //     repeated_once: false,
+    //     idx_s: 0,
+    //     idx_p: 0,
+    // },
+    //     ) || is_there_a_match(&s[idx_s + 1..], p);
+    // }
+    // s.len() == 0 || can_pattern_be_ignored(p)
+    is_there_a_match_from_here(
+        s,
+        p,
+        LoopVars {
+            repeated_once: false,
+            idx_s: 0,
+            idx_p: 0,
+        },
+    )
 }
 
 struct LoopVars {
@@ -65,8 +74,8 @@ fn is_there_a_match_from_here(s: &str, p: &str, loop_vars: LoopVars) -> bool {
     // let mut so = si.next();
 
     if p.len() <= loop_vars.idx_p {
-        // pattern ended
-        return true;
+        // pattern ended, did string end too?
+        return s.len() <= loop_vars.idx_s;
     }
 
     if s.len() <= loop_vars.idx_s {
@@ -156,7 +165,7 @@ fn is_there_a_match_from_here(s: &str, p: &str, loop_vars: LoopVars) -> bool {
     match (p_look_ahead, loop_vars.repeated_once) {
         ('+', false) => repeat(),
         ('+', true) => repeat() || consume(),
-        ('*', _) => repeat() || consume(),
+        ('*', _) => repeat() || consume() || ignore(),
         (_, _) => consume_letter(),
     }
 
