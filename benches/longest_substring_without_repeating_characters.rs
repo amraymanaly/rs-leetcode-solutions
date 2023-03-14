@@ -1,5 +1,6 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use solver::longest_substring_without_repeating_characters::length_of_longest_substring as func;
+use solver::regular_expression_matching::is_match as func2;
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("LSWRC lorem ipsum", |b| b.iter(|| func("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque massa orci, imperdiet sit amet venenatis ac, commodo ut lacus. Nullam nulla est, pharetra quis massa ut, imperdiet egestas neque. Nullam scelerisque, turpis nec sollicitudin venenatis, nulla elit pharetra lectus, sit amet faucibus justo enim at mauris. Integer vitae cursus nibh. Etiam ac erat sem. Nullam ut facilisis turpis. Aliquam semper lacus leo, quis ultrices enim auctor sit amet.
@@ -13,5 +14,11 @@ fn criterion_benchmark(c: &mut Criterion) {
     Fusce placerat lorem vel elit iaculis, at pellentesque sapien lobortis. Duis ante lorem, maximus sit amet ornare vitae, congue sit amet lacus. Fusce blandit congue velit eu porttitor. Praesent lacus felis, pulvinar non vestibulum at, ultricies eu massa. Suspendisse eros enim, fringilla et nibh ac, mattis sagittis dolor. Nulla ullamcorper lacus id sapien tincidunt, vel efficitur metus dapibus. Pellentesque rhoncus, lacus in molestie elementum, enim quam rhoncus tortor, sed varius turpis tellus vitae augue. Nam a urna mauris. Sed mi mauris, auctor vitae leo ut, tincidunt rhoncus turpis. Mauris sem lacus, mollis non commodo eu, eleifend a eros. Quisque vestibulum aliquam placerat. Cras tincidunt quam sed iaculis volutpat. Nunc metus enim.".into())));
 }
 
-criterion_group!(benches, criterion_benchmark);
+fn criterion_benchmark2(c: &mut Criterion) {
+    c.bench_function("Regex trial", |b| {
+        b.iter(|| func2("aaaaaaaaaaaaaaaaaaab".into(), "a*a*a*a*a*a*a*a*a*a*".into()))
+    });
+}
+
+criterion_group!(benches, criterion_benchmark2);
 criterion_main!(benches);
