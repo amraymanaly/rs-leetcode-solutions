@@ -1,7 +1,7 @@
-use solver::regular_expression_matching::is_match;
+use solver::longest_common_prefix::longest_common_prefix;
 fn main() {
-    // let p = "012345678";
-    // println!("{}", &p[6..11]);
-    let res = is_match("aaaaaaaaaaaaaaaaaaab".into(), "a*a*a*a*a*a*a*a*a*a*".into());
-    println!("Got {} in {} rounds!", res.0, res.1);
+    println!(
+        "answer is \"{}\"",
+        longest_common_prefix(vec!["flower".into(), "flow".into(), "flight".into()])
+    );
 }
