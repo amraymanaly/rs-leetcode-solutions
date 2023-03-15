@@ -1,42 +1,136 @@
 struct S<'a> {
     s: &'a str,
     p: &'a str,
+    t: usize,
 }
 
-pub fn is_match(s: String, p: String) -> bool {
-    S::new(&s, &p).is_there_a_match()
+// TODO no tweaking can be made... the rust compiler is smart enough
+// algorithm logic optimization is needed...
+// hmmm...
+// I have an idea!
+// Let's get the pattern into "normal form"!
+// i.e...
+
+//  (a,a)
+//      a*a* => a*              0000 => 00
+//      a*a+ => a+              0001 => 01
+//      a+a* => a+              0100 => 01
+//      a+a+ => a+              0101 => 01
+
+//  (a,.)
+//      a*.* => .*      #       0010 => 10
+//      a*.+ => .+      #       0011 => 11
+//      a+.* => a.*
+//      a+.+ => a.+
+
+//  (.,a)
+//      .*a* => .*              1000 => 10
+//      .*a+ => .*a
+//      .+a* => .+      #       1100 => 11
+//      .+a+ => .+a
+
+//  (.,.)
+//      .*.* => .*      #       1010 => 10
+//      .*.+ => .+      #       1011 => 11
+//      .+.* => .+      #       1110 => 11
+//      .+.+ => .+              1111 => 11
+
+// other less important patterns that I'm not implementing
+// because it would require a tokenizer...
+
+//      a*a => a+
+//      aa* => a+
+//      aa+ => a+
+
+pub fn is_match(s: String, mut p: String) -> (bool, usize) {
+    println!("pattern [originalll] is {p}");
+    normalize_pattern(&mut p, 0);
+    println!("pattern [normalized] is {p}");
+
+    let mut g = S::new(&s, &p);
+    let res = g.is_there_a_match();
+    (res, g.t)
+}
+
+#[allow(non_snake_case)]
+fn normalize_pattern(p: &mut String, start: usize) {
+    if p.len() - start < 4 {
+        return;
+    }
+
+    let c = p.as_bytes();
+    let (A, B, C, D) = (c[0] as char, c[1] as char, c[2] as char, c[3] as char);
+
+    if !((B == '*' || B == '+') && (D == '*' || D == '+'))
+        || match (A, C) {
+            ('.', _) | (_, '.') => false,
+            (a, c) => a != c,
+        }
+    {
+        normalize_pattern(p, start + 1);
+        return;
+    }
+    // now it's one of the 16 patterns
+    // we start with the don't cares
+    // i.e., the unnumbered patterns
+
+    let to = if A == '.' && C != '.' && D == '+' {
+        format!(".{B}{C}")
+    } else if A != '.' && B == '+' && C == '.' {
+        format!("{A}.{D}")
+    } else {
+        // now, the digital patterns
+        // I used an online Karnaugh map solver :D
+        format!(
+            "{}{}",
+            if A == '.' || C == '.' { '.' } else { A },
+            if B == '+' || D == '+' { '+' } else { '*' }
+        )
+    };
+
+    p.replace_range(start..start + 4, &to);
+    normalize_pattern(p, start);
 }
 
 impl S<'_> {
     pub fn new<'a>(s: &'a str, p: &'a str) -> S<'a> {
-        S { s, p }
+        S { s, p, t: 0usize }
     }
 
-    fn repeat(&self, idx_s: usize, idx_p: usize) -> bool {
-        println!("repeat");
+    fn repeat(&mut self, idx_s: usize, idx_p: usize) -> bool {
+        // println!("repeat");
         self.is_there_a_match_from_here(true, idx_s + 1, idx_p)
     }
 
-    fn consume(&self, idx_s: usize, idx_p: usize) -> bool {
-        println!("consume");
+    fn consume(&mut self, idx_s: usize, idx_p: usize) -> bool {
+        // println!("consume");
         self.is_there_a_match_from_here(false, idx_s + 1, idx_p + 2)
     }
 
-    fn consume_letter(&self, idx_s: usize, idx_p: usize) -> bool {
-        println!("consume_letter");
+    fn consume_letter(&mut self, idx_s: usize, idx_p: usize) -> bool {
+        // println!("consume_letter");
         self.is_there_a_match_from_here(false, idx_s + 1, idx_p + 1)
     }
 
-    fn ignore(&self, idx_s: usize, idx_p: usize) -> bool {
-        println!("ignore");
+    fn ignore(&mut self, idx_s: usize, idx_p: usize) -> bool {
+        // println!("ignore");
         self.is_there_a_match_from_here(false, idx_s, idx_p + 2)
     }
 
-    pub fn is_there_a_match(&self) -> bool {
+    pub fn is_there_a_match(&mut self) -> bool {
         self.is_there_a_match_from_here(false, 0, 0)
     }
 
-    fn is_there_a_match_from_here(&self, repeated_once: bool, idx_s: usize, idx_p: usize) -> bool {
+    fn is_there_a_match_from_here(
+        &mut self,
+        repeated_once: bool,
+        idx_s: usize,
+        idx_p: usize,
+    ) -> bool {
+        self.t += 1;
+        // if self.t == 50 {
+        //     panic!("too much");
+        // }
         if self.p.len() <= idx_p {
             return self.s.len() <= idx_s;
         }

@@ -3,7 +3,7 @@ use solver::longest_substring_without_repeating_characters::length_of_longest_su
 use solver::regular_expression_matching::is_match as func2;
 
 fn criterion_benchmark(c: &mut Criterion) {
-    c.bench_function("LSWRC lorem ipsum", |b| b.iter(|| func("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque massa orci, imperdiet sit amet venenatis ac, commodo ut lacus. Nullam nulla est, pharetra quis massa ut, imperdiet egestas neque. Nullam scelerisque, turpis nec sollicitudin venenatis, nulla elit pharetra lectus, sit amet faucibus justo enim at mauris. Integer vitae cursus nibh. Etiam ac erat sem. Nullam ut facilisis turpis. Aliquam semper lacus leo, quis ultrices enim auctor sit amet.
+    c.bench_function("lswrc", |b| b.iter(|| func("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque massa orci, imperdiet sit amet venenatis ac, commodo ut lacus. Nullam nulla est, pharetra quis massa ut, imperdiet egestas neque. Nullam scelerisque, turpis nec sollicitudin venenatis, nulla elit pharetra lectus, sit amet faucibus justo enim at mauris. Integer vitae cursus nibh. Etiam ac erat sem. Nullam ut facilisis turpis. Aliquam semper lacus leo, quis ultrices enim auctor sit amet.
 
     Nam nec risus gravida, fermentum nulla eu, ultricies diam. Morbi ut lacinia leo. Phasellus condimentum eros non ante accumsan, in aliquet nibh viverra. Nullam ullamcorper ligula sed mauris viverra tincidunt. Mauris odio dui, volutpat ut elementum at, consectetur nec ex. Etiam sit amet tellus congue, ornare orci vitae, sollicitudin mauris. Vestibulum velit risus, dapibus id bibendum et, tincidunt eu nulla. Aenean maximus nec eros a pellentesque. Sed feugiat ornare metus quis faucibus. Praesent tristique neque suscipit consequat egestas. Donec eget laoreet tellus.
     
@@ -15,8 +15,9 @@ fn criterion_benchmark(c: &mut Criterion) {
 }
 
 fn criterion_benchmark2(c: &mut Criterion) {
-    c.bench_function("Regex trial", |b| {
-        b.iter(|| func2("aaaaaaaaaaaaaaaaaaab".into(), "a*a*a*a*a*a*a*a*a*a*".into()))
+    c.bench_function("regex", |b| {
+        // b.iter(|| func2("aaaaaaaaaaaaaaaaaaab".into(), "a*a*a*a*a*a*a*a*a*a*".into()))
+        b.iter(|| func2("aab".into(), "a*a+".into()))
     });
 }
 
