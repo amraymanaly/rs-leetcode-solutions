@@ -31,4 +31,12 @@ mod regular_expression_matching {
     fn example6() {
         assert_eq!(is_match("aa".into(), "a".into()).0, false);
     }
+
+    #[test]
+    fn example7() {
+        assert_eq!(
+            is_match("aaaaaaaaaaaaaaaaaaab".into(), "a*a*a*a*a*a*a*a*a*a*".into()).0,
+            false
+        );
+    }
 }

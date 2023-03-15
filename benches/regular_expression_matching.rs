@@ -3,7 +3,7 @@ use solver::regular_expression_matching::is_match as func;
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("Regex trial", |b| {
-        b.iter(|| func("aaaab".into(), "a*a*a*".into()))
+        b.iter(|| func("aaaaaaaaaaaaaaaaaaab".into(), "a*a*a*a*a*a*a*a*a*a*".into()))
     });
 }
 

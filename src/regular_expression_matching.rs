@@ -42,10 +42,48 @@ struct S<'a> {
 //      aa* => a+
 //      aa+ => a+
 
+// enum RepetitionAnnotation {
+//     None,
+//     Star,
+//     Plus,
+// }
+
+// #[derive(Clone, Copy)]
+// struct PatternToken {
+//     letter: char,
+//     repeat: RepetitionAnnotation,
+// }
+
+// fn tokenize(p: &str) -> Vec<PatternToken> {
+//     let mut pt = Vec::with_capacity(20);
+//     let mut tk = PatternToken {
+//         letter: '_',
+//         repeat: RepetitionAnnotation::None,
+//     };
+//     for c in p.chars() {
+//         match c {
+//             '+' => tk.repeat = RepetitionAnnotation::Plus,
+//             '*' => tk.repeat = RepetitionAnnotation::Star,
+//             a => {
+//                 // push the previous one
+//                 if tk.letter != '_' {
+//                     pt.push(tk);
+//                 }
+//                 tk.letter = a;
+//                 tk.repeat = RepetitionAnnotation::None;
+//             }
+//         }
+//     }
+//     if tk.letter != '_' {
+//         pt.push(tk);
+//     }
+//     pt
+// }
+
 pub fn is_match(s: String, mut p: String) -> (bool, usize) {
-    println!("pattern [originalll] is {p}");
+    // println!("pattern [originalll] is {p}");
     normalize_pattern(&mut p, 0);
-    println!("pattern [normalized] is {p}");
+    // println!("pattern [normalized] is {p}");
 
     let mut g = S::new(&s, &p);
     let res = g.is_there_a_match();
