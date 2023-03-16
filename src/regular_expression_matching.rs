@@ -81,9 +81,9 @@ struct S<'a> {
 // }
 
 pub fn is_match(s: String, mut p: String) -> (bool, usize) {
-    // println!("pattern [originalll] is {p}");
+    println!("pattern [originalll] is {p}");
     normalize_pattern(&mut p, 0);
-    // println!("pattern [normalized] is {p}");
+    println!("pattern [normalized] is {p}");
 
     let mut g = S::new(&s, &p);
     let res = g.is_there_a_match();
@@ -99,12 +99,7 @@ fn normalize_pattern(p: &mut String, start: usize) {
     let c = p.as_bytes();
     let (A, B, C, D) = (c[0] as char, c[1] as char, c[2] as char, c[3] as char);
 
-    if !((B == '*' || B == '+') && (D == '*' || D == '+'))
-        || match (A, C) {
-            ('.', _) | (_, '.') => false,
-            (a, c) => a != c,
-        }
-    {
+    if !((B == '*' || B == '+') && (D == '*' || D == '+')) || !(A == C || A == '.' || C == '.') {
         normalize_pattern(p, start + 1);
         return;
     }
@@ -165,6 +160,10 @@ impl S<'_> {
         idx_s: usize,
         idx_p: usize,
     ) -> bool {
+        // what does a normalized pattern tell me?
+        // it tells me that if i can repeat a non-dot, i should,
+        // until i can't (because it cannot be followed by a dot plus)
+        // ughhhhh noooooo it doesn't....
         self.t += 1;
         // if self.t == 50 {
         //     panic!("too much");

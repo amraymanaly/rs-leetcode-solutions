@@ -1,27 +1,46 @@
-use std::cmp::Ordering;
+use std::str::Chars;
 
-#[allow(unused_must_use)]
-pub fn longest_common_prefix(mut strs: Vec<String>) -> String {
-    if strs.len() == 1 {
-        return strs[0].clone();
+fn all_mut<F>(iters: &mut Vec<Chars>, mut f: F) -> bool
+where
+    F: FnMut(&mut Chars) -> bool,
+{
+    for i in iters {
+        if !f(i) {
+            return false;
+        }
     }
-    // binary search!
-    let smallest_string = strs.iter().enumerate().min_by_key(|l| l.1.len()).unwrap();
-    let smallest_string = strs.remove(smallest_string.0);
-    let mut idx = None;
-    (1..=smallest_string.len())
-        .collect::<Vec<usize>>()
-        .binary_search_by(|&c| {
-            if strs.iter().all(|s| s[..c] == smallest_string[..c]) {
-                idx = Some(c - 1);
-                Ordering::Less
-            } else {
-                Ordering::Greater
+    true
+}
+
+pub fn longest_common_prefix(strs: Vec<String>) -> String {
+    if strs.iter().any(|s| s.len() == 0) {
+        return "".into();
+    }
+
+    let mut iters: Vec<Chars> = strs.iter().map(|s| s.chars()).collect();
+
+    let mut idx = 0;
+    let mut c = None;
+
+    loop {
+        if all_mut(&mut iters, |s| match c {
+            Some(d) => match s.next() {
+                Some(e) => {
+                    // println!("testing {d}");
+                    d == e
+                }
+                None => false,
+            },
+            None => {
+                c = s.next();
+                true
             }
-        });
-    if let Some(idx) = idx {
-        smallest_string[..=idx].into()
-    } else {
-        "".into()
+        }) {
+            idx += 1;
+            c = None;
+        } else {
+            break;
+        }
     }
+    strs[0][..idx].into()
 }
