@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use rand::seq::SliceRandom;
+
 pub fn can_jump(nums: Vec<i32>) -> bool {
     S::new(nums)
 }
@@ -31,14 +33,18 @@ impl S {
         } else if max_jumps == 0 {
             false
         } else {
-            // println!("jumping!");
+            // don't touch me!
             self.does_it.insert(index, CanItReach::Computing);
-            (1..=max_jumps).any(|jump| {
+
+            // try the jumps...
+            let mut jumps: Vec<_> = (1..=max_jumps).collect();
+            let mut rng = rand::thread_rng();
+            jumps.shuffle(&mut rng);
+
+            jumps.iter().any(|jump| {
                 vec![index as i32 - jump, index as i32 + jump]
                     .iter()
                     .any(|&p| {
-                        // println!("trying {p}");
-                        // std::thread::sleep(std::time::Duration::from_secs(1));
                         if p < 0 || p as usize >= self.nums.len() {
                             false
                         } else {
@@ -54,7 +60,7 @@ impl S {
             })
         };
 
-        // println!("index {index} says {b}");
+        println!("index {index} says {b}");
 
         self.does_it.insert(index, CanItReach::Decided(b));
         b
