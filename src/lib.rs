@@ -8,3 +8,4 @@ pub mod longest_common_prefix;
 pub mod longest_substring_without_repeating_characters;
 pub mod regular_expression_matching;
 pub mod three_sum;
+pub mod valid_sudoku;
