@@ -1,7 +1,10 @@
 pub mod add_two_numbers;
 pub mod container_with_most_water;
+pub mod design_add_and_search_words_data_structure;
 pub mod group_anagrams;
 pub mod jump_game;
+pub mod jump_game_2;
 pub mod longest_common_prefix;
 pub mod longest_substring_without_repeating_characters;
 pub mod regular_expression_matching;
+pub mod three_sum;
