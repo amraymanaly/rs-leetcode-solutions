@@ -1,17 +1,16 @@
 use std::cmp::min;
-impl Solution {
-    pub fn trap(mut height: Vec<i32>) -> i32 {
-        // idea: i see a bar of height h, i fix on it, and move forward
-        // till i meet a bar of height >= h. if i do, i add the distance
-        // between them to the count. then i return to the bar right next
-        // to the one i fixed on. This only works when bar heights are
-        // in non-decreasing order... so, I'll reduce it to it!
-        let c = water(height.iter());
+pub fn trap(height: Vec<i32>) -> i32 {
+    // idea: i see a bar of height h, i fix on it, and move forward
+    // till i meet a bar of height >= h. if i do, i add the distance
+    // between them to the count. then i return to the bar right next
+    // to the one i fixed on. This only works when bar heights are
+    // in non-decreasing order... so, I'll reduce it to it!
+    let c = water(height.iter());
 
-        let h = &height[c.1..];
-        c.0 + water(h.iter().rev()).0
-    }
+    let h = &height[c.1..];
+    c.0 + water(h.iter().rev()).0
 }
+
 fn water<'a>(mut height: impl Iterator<Item = &'a i32>) -> (i32, usize) {
     let mut count = 0;
     let mut fix = None; // (index, height)
