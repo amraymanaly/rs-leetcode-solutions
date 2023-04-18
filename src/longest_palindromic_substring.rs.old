@@ -1,0 +1,23 @@
+use std::collections::HashMap;
+
+pub fn longest_palindrome(s: String) -> String {
+    // 1. identify all could-be palindromes
+    // 2. check if they indeed are, marking inner palindromes along the way
+    // 3. keep track of the longest so far
+
+    // step 1
+    let mut couldBe = HashMap::with_capacity(s.len());
+    for (i, c) in s.chars().enumerate() {
+        match couldBe.get(&c) {
+            None => {
+                couldBe.insert(c, vec![i]);
+            }
+            Some(v) => v.push(i),
+        }
+    }
+
+    // step 2
+    let mut palindromic = HashMap
+
+    "".into()
+}
